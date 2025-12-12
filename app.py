@@ -12,8 +12,8 @@ def load_css():
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
 def design_Header():
-    st.title("PSX Investment Calculator")
-    st.write("This is a simple app to calculate the investment in the PSX data within the KSE100 index")
+    st.title("KSE-100 Investment Calculator")
+    st.write("Kickstart your PSX portfolio. Get instant access to leading KSE-100 companies, sorted by market index weight.")
 
 def design_Results_Header(top_companies):
     col1, col2, col3 = st.columns(3)

@@ -39,6 +39,11 @@ def convert_df(data,header_names):
     df = pd.DataFrame(data, columns=header_names)
     return df
 
+def add_sector_names(df,df_company):
+    df_merged = pd.merge(df, df_company[['symbol', 'sectorName']], left_on='SYMBOL', right_on='symbol', how='left')
+    df_merged.drop(columns=['symbol'], inplace=True)
+    return df_merged
+
 def get_top_companies(df, qty):
     top_5_companies = df.sort_values(by = "IDX WTG (%)",ascending = False).head(qty)
     return top_5_companies
@@ -56,11 +61,20 @@ def investment_amount(df,total_investment):
     investment_amount = df["Normalized_percentage"]/100*total_investment
     return investment_amount
 
+def read_company_list():
+    company_df = pd.read_csv("company_list.csv")
+    return company_df
+
+
+
+
 def main(total_investment,num_companies):
     response = request_data("https://dps.psx.com.pk/indices/KSE100")
     soup = parse_data(response)
     table_data,header_names = extract_table(soup)
-    df = convert_df(table_data,header_names)
+    df_companies = convert_df(table_data,header_names)
+    df_company_list = read_company_list()
+    df = add_sector_names(df_companies,df_company_list)
     top_companies = get_top_companies(df,num_companies)
     inv_pct = investment_percentage(top_companies)
     top_companies["Investment percentage"] = inv_pct

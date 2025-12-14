@@ -1,5 +1,5 @@
 import streamlit as st
-from file import main
+from file import PSXInvestmentCalculator
 
 st.set_page_config(
     page_title="PSX Investment Calculator",
@@ -45,13 +45,14 @@ def design_Results_Data(top_companies):
 def get_input():
     total_investment = st.number_input("Total Investment", value=100000, min_value=0)
     num_companies = st.number_input("Number of Companies", value=5, min_value=1)
-    return total_investment, num_companies
+    index_name = st.selectbox("Select Index", ["KSE100", "KMI30"])
+    return total_investment, num_companies, index_name
 
 load_css()
 design_Header()
-total_investment, num_companies = get_input()
+total_investment, num_companies, index_name = get_input()
 if st.button("Calculate"):
 
-    top_companies = main(total_investment,num_companies)
+    top_companies = PSXInvestmentCalculator(total_investment,num_companies, index_name).main()
     design_Results_Header(top_companies)
     design_Results_Data(top_companies)
